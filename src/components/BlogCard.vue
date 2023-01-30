@@ -1,21 +1,26 @@
 <template>
   <div class="blog-card">
     <div v-show="editPost" class="icons">
-      <div class="icon">
+      <div @click="editBlog" class="icon">
         <Edit class="edit" />
       </div>
-      <div class="icon">
+      <div @click="deletePost" class="icon">
         <Delete class="delete" />
       </div>
     </div>
-    <img
-      :src="require(`../assets/blogCards/${post.blogCoverPhoto}.jpg`)"
-      alt=""
-    />
+    <img :src="post.blogCoverPhoto" alt="" />
     <div class="info">
       <h4>{{ post.blogTitle }}</h4>
-      <h6>Posted on: {{ post.blogDate }}</h6>
-      <router-link class="link" to="#">
+      <h6>
+        Posted on:
+        {{
+          new Date(post.blogDate).toLocaleString("en-us", { dateStyle: "long" })
+        }}
+      </h6>
+      <router-link
+        class="link"
+        :to="{ name: 'ViewBlog', params: { blogid: this.post.blogID } }"
+      >
         View The Post <Arrow class="arrow" />
       </router-link>
     </div>
@@ -34,11 +39,22 @@ export default {
     Edit,
     Delete,
   },
+  methods: {
+    deletePost() {
+      this.$store.dispatch("deletePost", this.post.blogID);
+    },
+    editBlog() {
+      this.$router.push({
+        name: "EditBlog",
+        params: { blogid: this.post.blogID },
+      });
+    },
+  },
   computed: {
-      editPost(){
-          return this.$store.state.editPost;
-      }
-  }
+    editPost() {
+      return this.$store.state.editPost;
+    },
+  },
 };
 </script>
 
@@ -52,20 +68,17 @@ export default {
   background-color: #fff;
   min-height: 420px;
   transition: 0.5s ease all;
-
   &:hover {
     transform: rotateZ(-1deg) scale(1.01);
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
       0 2px 4px -1px rgba(0, 0, 0, 0.06);
   }
-
-  .icons { 
+  .icons {
     display: flex;
     position: absolute;
     top: 10px;
     right: 10px;
     z-index: 99;
-
     .icon {
       display: flex;
       justify-content: center;
@@ -75,10 +88,8 @@ export default {
       border-radius: 50%;
       background-color: #fff;
       transition: 0.5s ease all;
-
       &:hover {
         background-color: #303030;
-
         .edit,
         .delete {
           path {
@@ -86,11 +97,9 @@ export default {
           }
         }
       }
-
       &:nth-child(1) {
         margin-right: 8px;
       }
-
       .edit,
       .delete {
         pointer-events: none;
@@ -99,7 +108,6 @@ export default {
       }
     }
   }
-
   img {
     display: block;
     border-radius: 8px 8px 0 0;
@@ -115,13 +123,11 @@ export default {
     z-index: 3;
     padding: 32px 16px;
     color: #000;
-
     h4 {
       padding-bottom: 8px;
       font-size: 20px;
       font-weight: 300;
     }
-
     h6 {
       font-weight: 400;
       font-size: 12px;
@@ -136,11 +142,9 @@ export default {
       font-size: 12px;
       padding-bottom: 4px;
       transition: 0.5s ease-in all;
-
       &:hover {
         color: rgba(48, 48, 48, 0.8);
       }
-
       .arrow {
         width: 10px;
       }

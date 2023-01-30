@@ -2,13 +2,15 @@
   <header>
     <nav class="container">
       <div class="branding">
-        <router-link class="header" :to="{ name: 'Home' }">FireBlogs</router-link>
+        <router-link class="header" :to="{ name: 'Home' }"
+          >FireBlogs</router-link
+        >
       </div>
       <div class="nav-links">
-        <ul v-show="!mobile">
+        <ul>
           <router-link class="link" :to="{ name: 'Home' }">Home</router-link>
           <router-link class="link" :to="{ name: 'Blogs' }">Blogs</router-link>
-          <router-link v-if="admin" class="link" :to="{ name: 'CreatePost' }"
+          <router-link v-if="user" class="link" :to="{ name: 'CreatePost' }"
             >Create Post</router-link
           >
           <router-link v-if="!user" class="link" :to="{ name: 'Login' }"
@@ -16,6 +18,7 @@
           >
         </ul>
         <div
+          v-if="user"
           @click="toggleProfileMenu"
           class="profile"
           ref="profile"
@@ -40,7 +43,7 @@
                   <p>Profile</p>
                 </router-link>
               </div>
-              <div v-if="admin" class="option">
+              <div class="option">
                 <router-link class="option" :to="{ name: 'Admin' }">
                   <adminIcon class="icon" />
                   <p>Admin</p>
@@ -60,8 +63,10 @@
       <ul class="mobile-nav" v-show="mobileNav">
         <router-link class="link" :to="{ name: ' Home ' }">Home </router-link>
         <router-link class="link" :to="{ name: 'Blogs' }">Blogs </router-link>
-        <router-link class="link" to="#">Create Post </router-link>
-        <router-link class="link" :to="{ name: 'Login' }"
+        <router-link v-if="user" class="link" :to="{ name: 'CreatePost' }"
+          >Create Post
+        </router-link>
+        <router-link v-if="!user" class="link" :to="{ name: 'Login' }"
           >Login/Register
         </router-link>
       </ul>
@@ -73,6 +78,8 @@ import menuIcon from "../assets/Icons/bars-regular.svg";
 import userIcon from "../assets/Icons/user-alt-light.svg";
 import adminIcon from "../assets/Icons/user-crown-light.svg";
 import signOutIcon from "../assets/Icons/sign-out-alt-regular.svg";
+import firebase from "firebase/app";
+import "firebase/auth";
 export default {
   name: "navigation",
   components: {
@@ -109,9 +116,19 @@ export default {
       this.mobileNav = !this.mobileNav;
     },
 
-
-    toggleProfileMenu() {
+    toggleProfileMenu(e) {
+      if (e.target === this.$refs.profile) {
         this.profileMenu = !this.profileMenu;
+      }
+    },
+    signOut() {
+      firebase.auth().signOut();
+      window.location.reload();
+    },
+  },
+  computed: {
+    user() {
+      return this.$store.state.user;
     },
   },
 };
@@ -178,6 +195,7 @@ header {
         border-radius: 100%;
         color: #fff;
         background-color: #303030;
+
         span {
           pointer-events: none;
         }

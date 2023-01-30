@@ -5,36 +5,32 @@
         <span>Toggle Editing Post</span>
         <input type="checkbox" v-model="editPost" />
       </div>
-      <BlogCard
-        :post="post"
-        v-for="(post, index) in sampleBlogCards"
-        :key="index"
-      />
+      <BlogCard :post="post" v-for="(post, index) in blogPosts" :key="index" />
     </div>
   </div>
 </template>
 
 <script>
-import BlogCard from "../components/BlogCard.vue";
+import BlogCard from "../components/BlogCard";
 export default {
   name: "blogs",
   components: { BlogCard },
   computed: {
-    sampleBlogCards() {
-      return this.$store.state.sampleBlogCards;
+    blogPosts() {
+      return this.$store.state.blogPosts;
     },
-    editPost : {
-        get(){
-            return this.$store.state.editPost
-        },
-        set(payload) {
-            this.$store.commit("toggleEditPost" , payload)
-        }
-    }
+    editPost: {
+      get() {
+        return this.$store.state.editPost;
+      },
+      set(payload) {
+        this.$store.commit("toggleEditPost", payload);
+      },
+    },
   },
-  beforeDestroy(){
-      this.$store.commit("toggleEditPost" , false )
-  }
+  beforeDestroy() {
+    this.$store.commit("toggleEditPost", false);
+  },
 };
 </script>
 
@@ -59,8 +55,7 @@ export default {
       width: 80px;
       height: 30px;
       border-radius: 20px;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     }
     input[type="checkbox"]:before {
       content: "";
@@ -73,8 +68,7 @@ export default {
       background: #303030;
       transform: scale(1.1);
       transition: 750ms ease all;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     }
     input:checked[type="checkbox"]:before {
       background: #fff;

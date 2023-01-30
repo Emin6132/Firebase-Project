@@ -1,5 +1,6 @@
 <template>
   <div class="form-wrap">
+    <Loading />
     <form class="login">
       <p class="login-register">
         Don't have an account ?
@@ -32,6 +33,7 @@
 <script>
 import email from "../assets/Icons/envelope-regular.svg";
 import password from "../assets/Icons/lock-alt-solid.svg";
+import Loading from "../components/Loading.vue";
 import firebase from "firebase/app";
 import "firebase/auth";
 export default {
@@ -39,6 +41,7 @@ export default {
   comments: {
     email,
     password,
+    Loading,
   },
   data() {
     return {
@@ -46,6 +49,7 @@ export default {
       password: null,
       error: null,
       errorMsg: "",
+      loading: null,
     };
   },
   methods: {
@@ -58,10 +62,12 @@ export default {
           this.$router.push({ name: "Home" });
           this.error = false;
           this.errorMsg = "";
+          this.loading = false;
         })
         .catch((err) => {
           this.error = true;
           this.errorMsg = err.message;
+          this.loading = false;
         });
     },
   },
